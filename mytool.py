@@ -6,6 +6,8 @@ import os
 import subprocess
 import time
 import sys
+from random import choice
+import string
 
 def ping(host):
     rc = subprocess.call(
@@ -17,6 +19,14 @@ def ping(host):
     else:
         print('%s: up' % host)
 
+def gen_pass(n=16):
+    all_chs = string.ascii_letters + string.digits  
+    result = ''
+    for i in range(n):
+        ch = choice(all_chs)
+        result += ch
+    return result
+
 
 parser = OptionParser(usage="%prog [-f] [-q]", version="%prog 1.0")
 parser.set_usage(sys.argv[0]+' [option]')
@@ -24,6 +34,7 @@ parser.add_option("-i", "--install", action='store', dest="pkg",help="install pa
 parser.add_option("-p", "--ping", action="store", dest='ping', help="ping a net such as ping 8.8.8")
 parser.add_option('-d','--host',action='store',dest='host',help='combine with -i')
 parser.add_option('-z','--zombie',action='store',dest='zombie',help='create a zombie process on loalhost machine')
+parser.add_option('-P','--passwd',action='store',dest='passwd',help='input a number and create a random passwd')
 (options, args) = parser.parse_args()
 
 if options.pkg:
@@ -55,3 +66,7 @@ if options.zombie:
             time.sleep(10)
     else:
         time.sleep(3)
+
+if options.passwd:
+   passwd=int(options.passwd)
+   print(gen_pass(passwd))
